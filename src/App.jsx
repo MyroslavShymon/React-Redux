@@ -1,9 +1,17 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCustomers } from "./store/asyncAction/customers";
+import {
+  addCashCreator,
+  asyncDecCountCreator,
+  asyncDecrementCreator,
+  asyncIcrementCreator,
+  asyncIncCountCreator,
+  getCashCreator,
+} from "./store/cashReducer";
 import {
   addCustomerAction,
   deleteCustomerAction,
+  fetchCustomerAction,
 } from "./store/customerReducer";
 
 function App() {
@@ -14,11 +22,12 @@ function App() {
   console.log(cash);
 
   const addCash = (cash) => {
-    dispatch({ type: "ADD_CASH", payload: cash });
+    dispatch(addCashCreator(cash));
   };
   const getCash = (cash) => {
-    dispatch({ type: "GET_CASH", payload: cash });
+    dispatch(getCashCreator(cash));
   };
+
   const addCustomer = (name) => {
     const customer = { name, id: Date.now() };
     dispatch(addCustomerAction(customer));
@@ -33,14 +42,18 @@ function App() {
       <div style={{ display: "flex" }}>
         <div>{cash}</div>
         <button onClick={() => addCash(Number(prompt()))}>Add cash</button>
+        <button onClick={() => dispatch(asyncIncCountCreator())}>
+          Async add cash
+        </button>
+        <button onClick={() => dispatch(asyncDecCountCreator())}>
+          Async decrement cash
+        </button>
         <button onClick={() => getCash(Number(prompt()))}>Take cash</button>
         <button onClick={() => addCustomer(prompt())}>Add customer</button>
-        <button onClick={() => dispatch(fetchCustomers())}>
-          Get many customers
-        </button>
+        <button onClick={() => dispatch(fetchCustomerAction())}>Get aLL</button>
       </div>
       <div>
-        {customers.length > 0 ? (
+        {customers?.length > 0 ? (
           <div>
             {customers.map((customer, customerIndex) => (
               <div
